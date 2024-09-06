@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+args=()
+
+add_option() {
+    key=$1
+    value="$(snapctl get "$key")"
+    [ -n "$value" ] && args+=("--$key=$value")
+}
+
+# Add snap config option
+add_option log.level
+add_option web.listen-address
+
+# Start the exporter with config options
+exec "${SNAP}/bin/smartctl_exporter" \
+    --smartctl.path="$SNAP/usr/sbin/smartctl" \
+    "${args[@]}"

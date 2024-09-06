@@ -1,0 +1,42 @@
+name: smartctl-exporter
+base: core24
+adopt-info: smartctl-exporter
+summary: Export smartctl statistics to Prometheus
+license: Apache-2.0
+contact: solutions-engineering@lists.canonical.com
+description: |
+  This snap includes smartctl_exporter to provide smartctl statistics to Prometheus.
+grade: stable
+confinement: strict
+platforms:
+  amd64:
+  arm64:
+
+apps:
+  smartctl-exporter:
+    daemon: simple
+    command: bin/smartctl_exporter.wrapper
+    restart-condition: on-failure
+    plugs:
+      - network-bind
+      - block-devices
+
+parts:
+  smartctl-exporter:
+    plugin: go
+    source: https://github.com/prometheus-community/smartctl_exporter.git
+    source-tag: v0.12.0
+    source-type: git
+    build-snaps:
+      - go
+    stage-packages:
+      - smartmontools
+    override-pull: |
+      craftctl default
+      TAG=$(git describe --tags --abbrev=10)
+      craftctl set version="${TAG#v}"
+  scripts:
+    plugin: dump
+    source: snap/local
+    organize:
+      smartctl_exporter.wrapper: bin/smartctl_exporter.wrapper
