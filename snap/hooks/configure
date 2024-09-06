@@ -1,0 +1,7 @@
+#!/bin/bash
+
+[ -z "$(snapctl get log.level)" ] && snapctl set log.level=info
+[ -z "$(snapctl get web.listen-address)" ] && snapctl set web.listen-address=:9633
+
+# Restart snap to apply new config.
+snapctl restart $SNAP_NAME
