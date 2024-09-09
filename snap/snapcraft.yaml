@@ -1,9 +1,11 @@
-name: smartctl-exporter
+name: smartctl_exporter
 base: core24
-adopt-info: smartctl-exporter
+adopt-info: smartctl_exporter
 summary: Export smartctl statistics to Prometheus
 license: Apache-2.0
 contact: solutions-engineering@lists.canonical.com
+issues: https://github.com/canonical/smartctl-exporter-snap/pulls
+source-code: https://github.com/canonical/smartctl-exporter-snap
 description: |
   This snap includes smartctl_exporter to provide smartctl statistics to Prometheus.
 grade: stable
@@ -13,7 +15,7 @@ platforms:
   arm64:
 
 apps:
-  smartctl-exporter:
+  smartctl_exporter:
     daemon: simple
     command: bin/smartctl_exporter.wrapper
     restart-condition: on-failure
@@ -22,7 +24,7 @@ apps:
       - block-devices
 
 parts:
-  smartctl-exporter:
+  smartctl_exporter:
     plugin: go
     source: https://github.com/prometheus-community/smartctl_exporter.git
     source-tag: v0.12.0
