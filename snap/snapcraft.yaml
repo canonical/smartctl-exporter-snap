@@ -1,4 +1,4 @@
-name: smartctl_exporter
+name: smartctl-exporter
 base: core24
 adopt-info: smartctl_exporter
 summary: Export smartctl statistics to Prometheus
