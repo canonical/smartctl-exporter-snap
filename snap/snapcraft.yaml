@@ -4,7 +4,7 @@ adopt-info: smartctl_exporter
 summary: Export smartctl statistics to Prometheus
 license: Apache-2.0
 contact: solutions-engineering@lists.canonical.com
-issues: https://github.com/canonical/smartctl-exporter-snap/pulls
+issues: https://github.com/canonical/smartctl-exporter-snap/issues
 source-code: https://github.com/canonical/smartctl-exporter-snap
 description: |
   This snap includes smartctl_exporter to provide smartctl statistics to Prometheus.
