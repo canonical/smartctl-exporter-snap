@@ -35,7 +35,7 @@ parts:
       - smartmontools
     override-pull: |
       craftctl default
-      TAG=$(git describe --tags --abbrev=10)
+      TAG=$(git describe --tags)
       craftctl set version="${TAG#v}"
   scripts:
     plugin: dump
