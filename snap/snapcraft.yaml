@@ -7,7 +7,50 @@ contact: solutions-engineering@lists.canonical.com
 issues: https://github.com/canonical/smartctl-exporter-snap/issues
 source-code: https://github.com/canonical/smartctl-exporter-snap
 description: |
-  This snap includes smartctl_exporter to provide smartctl statistics to Prometheus.
+  This snap includes smartctl_exporter to provide smartctl statistics via Prometheus.
+  Grafana dashboards can then be used to visualize the exported metrics, see for example:\
+  https://grafana.com/grafana/dashboards/20204-smart-hdd/
+
+  **How-To**
+  ---
+
+  **How to install the snap:**
+
+     sudo snap install smartctl-exporter
+
+  The snap will start collecting smartctl statistics via default port `9633` on localhost.
+
+  **How to configure the service:**
+
+  The smatctl-exporter can be configured by setting the snap configuration options.\
+  For example:
+
+     # Get all the configuration options
+     sudo snap get smartctl-exporter
+
+     # Set the exporter port
+     sudo snap set smartctl-exporter web.listen-address=:9633
+
+     # Restart the exporter service to apply the changes
+     sudo snap restart smartctl-exporter
+
+  **Reference**
+  ---
+
+  Available configurations options:
+
+  - `web.listen-address`: the address smartctl-exporter binds to.
+    The default is `:9633`.
+  - `log.level`: the log level of the smartctl-exporter. One of: [debug, info, warn, error]
+    The default is `info`.
+  - `smartctl.device-exclude`: Regexp of device names to exclude from automatic scanning. (mutually exclusive to device-include)
+  - `smartctl.device-include`: Regexp of device names to include in automatic scanning. (mutually exclusive to device-exclude)
+
+  **Links**
+  ---
+  Upstream smatctl_exporter repository\
+  https://github.com/prometheus-community/smartctl_exporter
+
 grade: stable
 confinement: strict
 platforms:
