@@ -11,6 +11,8 @@ add_option() {
 # Add snap config option
 add_option log.level
 add_option web.listen-address
+add_option smartctl.device-exclude
+add_option smartctl.device-include
 
 # Start the exporter with config options
 exec "${SNAP}/bin/smartctl_exporter" \

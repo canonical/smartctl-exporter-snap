@@ -2,6 +2,8 @@
 
 [ -z "$(snapctl get log.level)" ] && snapctl set log.level=info
 [ -z "$(snapctl get web.listen-address)" ] && snapctl set web.listen-address=:9633
+[ -z "$(snapctl get smartctl.device-exclude)" ] && snapctl set smartctl.device-exclude=
+[ -z "$(snapctl get smartctl.device-include)" ] && snapctl set smartctl.device-include=
 
 # Restart snap to apply new config.
 snapctl restart $SNAP_NAME
