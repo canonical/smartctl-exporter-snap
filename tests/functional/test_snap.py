@@ -77,7 +77,7 @@ def _check_config(config_parent: str, config: str):
 
 @contextmanager
 def _config_setup(config_str, new_value):
-    """Set up a context manager to test snap bind configuration."""
+    """Set up a context manager to test snap configuration."""
     config_parent, config = config_str.split(".")
     try:
         _check_config(config_parent, config)
@@ -87,10 +87,6 @@ def _config_setup(config_str, new_value):
         # Revert back
         _unset_config(config_parent, config)
         _check_service_active()
-
-
-def get_start_command() -> str:
-    return subprocess.check_output("ps -C smartctl_exporter -o cmd".split(), text=True)
 
 
 # Snap tests
@@ -125,7 +121,8 @@ def test_valid_log_level_config() -> None:
     """Test valid snap log level configuration."""
     with _config_setup("log.level", "debug"):
         _check_service_active()
-        assert "log.level=debug" in get_start_command(), "log.level=debug was not set"
+        result = subprocess.check_output("ps -C smartctl_exporter -o cmd".split(), text=True)
+        assert "log.level=debug" in result, "log.level=debug was not set"
 
 
 def test_invalid_log_level_config() -> None:
