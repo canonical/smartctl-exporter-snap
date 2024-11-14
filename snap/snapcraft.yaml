@@ -28,8 +28,8 @@ description: |
      # Get all the configuration options
      sudo snap get smartctl-exporter
 
-     # Set the exporter port
-     sudo snap set smartctl-exporter web.listen-address=:9633
+     # Set a different exporter bind-address
+     sudo snap set smartctl-exporter web.listen-address=:9664
 
      # Restart the exporter service to apply the changes
      sudo snap restart smartctl-exporter
