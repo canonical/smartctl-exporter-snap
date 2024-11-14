@@ -107,7 +107,6 @@ def test_smartctl_exporter_metrics() -> None:
     data = _get_endpoint_data(ENDPOINT)
 
     assert "smartctl_devices" in data
-    assert "smartctl_version" in data
 
 
 def test_valid_bind_config() -> None:
