@@ -105,14 +105,12 @@ def test_smartctl_exporter_service() -> None:
 def test_smartctl_exporter_metrics() -> None:
     """Test the metrics of the smartctl_exporter service."""
     data = _get_endpoint_data(ENDPOINT)
-
     assert "smartctl_devices" in data
 
 
 def test_valid_bind_config() -> None:
     """Test valid snap bind configuration."""
     new_bind = ":9770"
-
     with _config_setup("web.listen-address", new_bind):
         _check_bind_config(new_bind)
 
