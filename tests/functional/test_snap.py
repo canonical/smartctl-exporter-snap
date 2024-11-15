@@ -44,11 +44,7 @@ def _get_endpoint_data(endpoint: str) -> str:
 @retry(wait=wait_fixed(2), stop=stop_after_delay(10))
 def _check_bind(bind: str) -> None:
     """Check if a service is listening on a specific bind."""
-    pid = (
-        subprocess.check_output(f"sudo lsof -sTCP:LISTEN -i tcp{bind} -F p".split(), text=True)
-        .strip()
-        .lstrip("p")
-    )
+    pid = subprocess.check_output(f"sudo lsof -t -i {bind}".split(), text=True).strip()
     assert "smartctl_exporter" in subprocess.check_output(
         f"cat /proc/{pid}/cmdline".split(), text=True
     ), f"{SNAP_NAME} is not listening on {bind}"
