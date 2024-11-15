@@ -3,7 +3,7 @@ import subprocess
 import urllib.request
 from contextlib import contextmanager
 
-from tenacity import retry, stop_after_delay, wait_fixed
+from tenacity import Retrying, retry, stop_after_delay, wait_fixed
 
 ENDPOINT = "http://localhost:9633/metrics"
 SYSTEMD_SERVICE = "snap.smartctl-exporter.smartctl-exporter"
@@ -125,9 +125,11 @@ def test_valid_log_level_config() -> None:
     """Test valid snap log level configuration."""
     with _config_setup("log.level", "debug"):
         _check_service_active()
-        assert "log.level=debug" in _get_start_cmd(
-            "smartctl_exporter"
-        ), "log.level=debug was not set"
+        for attempt in Retrying(wait=wait_fixed(2), stop=stop_after_delay(10)):
+            with attempt:
+                assert "log.level=debug" in _get_start_cmd(
+                    "smartctl_exporter"
+                ), "log.level=debug was not set"
 
 
 def test_invalid_log_level_config() -> None:
