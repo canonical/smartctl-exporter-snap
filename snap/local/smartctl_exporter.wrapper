@@ -4,13 +4,18 @@ args=()
 
 add_option() {
     key=$1
-    value="$(snapctl get "$key")"
-    [ -n "$value" ] && args+=("--$key=$value")
+    if value="$(snapctl get "$key" 2>/dev/null)"; then
+        if [ -n "$value" ]; then
+            args+=("--$key=$value")
+        fi
+    fi
 }
 
-# Add snap config option
+# Add snap config options
 add_option log.level
 add_option web.listen-address
+add_option smartctl.device-exclude
+add_option smartctl.device-include
 
 # Start the exporter with config options
 exec "${SNAP}/bin/smartctl_exporter" \
