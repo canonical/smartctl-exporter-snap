@@ -20,7 +20,7 @@ def _check_service_failed() -> None:
 
 @retry(wait=wait_fixed(2), stop=stop_after_delay(10))
 def _check_service_active() -> None:
-    """Check if a systemd service is active."""
+    """Check if a systemd service is in a activemstate."""
     assert 0 == subprocess.call(
         f"sudo systemctl is-active --quiet {SYSTEMD_SERVICE}".split()
     ), f"{SYSTEMD_SERVICE} is not running"
@@ -42,10 +42,10 @@ def _get_endpoint_data(endpoint: str) -> str:
 
 
 @retry(wait=wait_fixed(2), stop=stop_after_delay(10))
-def _check_bind(bind: str) -> None:
+def _check_bind(bind: str, service: str) -> None:
     """Check if a service is listening on a specific bind."""
     pid = subprocess.check_output(f"sudo lsof -t -i {bind}".split(), text=True).strip()
-    assert "smartctl_exporter" in subprocess.check_output(
+    assert service in subprocess.check_output(
         f"cat /proc/{pid}/cmdline".split(), text=True
     ), f"{SNAP_NAME} is not listening on {bind}"
 
@@ -108,7 +108,7 @@ def test_valid_bind_config() -> None:
     """Test valid snap bind configuration."""
     new_bind = ":9770"
     with _config_setup("web.listen-address", new_bind):
-        _check_bind(new_bind)
+        _check_bind(new_bind, "smartctl_exporter")
 
 
 def test_invalid_bind_config() -> None:
