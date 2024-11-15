@@ -3,7 +3,6 @@ import subprocess
 import urllib.request
 from contextlib import contextmanager
 
-# import pytest
 from tenacity import retry, stop_after_delay, wait_fixed
 
 ENDPOINT = "http://localhost:9633/metrics"
@@ -43,16 +42,21 @@ def _get_endpoint_data(endpoint: str) -> str:
 
 
 @retry(wait=wait_fixed(2), stop=stop_after_delay(10))
-def _check_bind_config(bind: str) -> None:
+def _check_bind(bind: str) -> None:
     """Check if a service is listening on a specific bind."""
-    assert 0 == subprocess.call(
-        f"nc -z localhost {bind.lstrip(':')}".split()
+    pid = (
+        subprocess.check_output(f"sudo lsof -sTCP:LISTEN -i tcp{bind} -F p".split(), text=True)
+        .strip()
+        .lstrip("p")
+    )
+    assert "smartctl_exporter" in subprocess.check_output(
+        f"cat /proc/{pid}/cmdline".split(), text=True
     ), f"{SNAP_NAME} is not listening on {bind}"
 
 
 @retry(wait=wait_fixed(2), stop=stop_after_delay(10))
 def _set_config(config_parent: str, config: str, value: str) -> None:
-    """Set a configuration value for a snap service and restart to apply."""
+    """Set a configuration value for a snap service."""
     assert 0 == subprocess.call(
         f"sudo snap set {SNAP_NAME} {config_parent}.{config}={value}".split()
     ), f"Failed to set {config_parent}.{config} to {value}"
@@ -108,7 +112,7 @@ def test_valid_bind_config() -> None:
     """Test valid snap bind configuration."""
     new_bind = ":9770"
     with _config_setup("web.listen-address", new_bind):
-        _check_bind_config(new_bind)
+        _check_bind(new_bind)
 
 
 def test_invalid_bind_config() -> None:
@@ -121,8 +125,10 @@ def test_valid_log_level_config() -> None:
     """Test valid snap log level configuration."""
     with _config_setup("log.level", "debug"):
         _check_service_active()
-        result = subprocess.check_output("ps -C smartctl_exporter -o cmd".split(), text=True)
-        assert "log.level=debug" in result, "log.level=debug was not set"
+        pid = subprocess.check_output("pgrep -f smartctl_exporter".split(), text=True).strip()
+        assert "log.level=debug" in subprocess.check_output(
+            f"cat /proc/{pid}/cmdline".split(), text=True
+        ), "log.level=debug was not set"
 
 
 def test_invalid_log_level_config() -> None:
