@@ -26,7 +26,7 @@ jobs:
         run: tox --workdir /tmp/tox -e test-all --notest
 
       - name: Test with tox
-        run: tox --workdir /tmp/tox run --skip-pkg-install --result-json results/tox.json --colored yes -e test-all
+        run: tox --workdir /tmp/tox run --skip-pkg-install --result-json results/tox.json -e test-all
 
       - name: Run TICS analysis
         uses: tiobe/tics-github-action@v3
@@ -34,7 +34,7 @@ jobs:
           PATH: "/tmp/tox/test-all"
         with:
           mode: qserver
-          project: smarctl-exporter-snap
+          project: smartctl-exporter-snap
           viewerUrl: https://canonical.tiobe.com/tiobeweb/TICS/api/cfg?name=default
           branchdir: ${{ github.workspace }}
           ticsAuthToken: ${{ secrets.TICSAUTHTOKEN }}
