@@ -23,11 +23,8 @@ jobs:
           # workflows breaking all at once when a new major version is released.
           python -m pip install 'tox<5'
 
-      - name: Setup Tox environment
-        run: tox --workdir /tmp/tox -e test-all --notest
-
       - name: Test with tox
-        run: tox --workdir /tmp/tox run --skip-pkg-install --result-json results/tox.json -e test-all
+        run: tox --workdir /tmp/tox run --result-json report/tox.json -e test-all
 
       - name: Run TICS analysis
         uses: tiobe/tics-github-action@v3
