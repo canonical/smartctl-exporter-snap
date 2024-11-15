@@ -43,3 +43,5 @@ dist/
 
 # Note: for editor-specific files, please don't add them here, as they are specific to your environment, not the project.
 # Instead, consider using a global gitignore on your workstation.
+
+results
