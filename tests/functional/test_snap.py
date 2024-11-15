@@ -66,6 +66,10 @@ def _unset_config(config_parent: str, config: str) -> None:
     ), f"Failed to unset {config}"
 
 
+def _get_start_cmd(process: str) -> str:
+    return subprocess.check_output(f"ps -C {process} -o cmd -ww".split(), text=True)
+
+
 def _check_config(config_parent: str, config: str):
     """Check if a configuration exists in the snap configuration."""
     result = subprocess.check_output(f"sudo snap get {SNAP_NAME} -d".split(), text=True)
@@ -121,9 +125,8 @@ def test_valid_log_level_config() -> None:
     """Test valid snap log level configuration."""
     with _config_setup("log.level", "debug"):
         _check_service_active()
-        pid = subprocess.check_output("pgrep -f smartctl_exporter".split(), text=True).strip()
-        assert "log.level=debug" in subprocess.check_output(
-            f"cat /proc/{pid}/cmdline".split(), text=True
+        assert "log.level=debug" in _get_start_cmd(
+            "smartctl_exporter"
         ), "log.level=debug was not set"
 
 
