@@ -38,6 +38,7 @@ jobs:
           sudo apt update
           python -m pip install --upgrade pip
           # tics action requires flake8 to be installed on the runner
+          # https://github.com/tiobe/tics-github-action/issues/410
           python -m pip install flake8
           # pin tox to the current major version to avoid
           # workflows breaking all at once when a new major version is released.
