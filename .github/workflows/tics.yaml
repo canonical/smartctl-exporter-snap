@@ -50,7 +50,7 @@ jobs:
           name: snap_artifact
 
       - name: Test with tox and produce coverage report
-        run: tox -e test-all
+        run: tox -e tics
 
       - name: Run TICS analysis
         uses: tiobe/tics-github-action@v3
