@@ -7,7 +7,25 @@ on:
       - main
 
 jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify snap builds successfully
+        id: build
+        uses: canonical/action-build@v1
+
+      - name: Upload the built snap
+        uses: actions/upload-artifact@v4
+        with:
+          name: snap_artifact
+          path: ${{ steps.build.outputs.snap }}
+
   tics-report:
+    needs: build
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -19,20 +37,23 @@ jobs:
         run: |
           sudo apt update
           python -m pip install --upgrade pip
+          # tics action requires flake8 to be installed on the runner
+          # https://github.com/tiobe/tics-github-action/issues/410
+          python -m pip install flake8
           # pin tox to the current major version to avoid
           # workflows breaking all at once when a new major version is released.
           python -m pip install 'tox<5'
 
-      - name: Setup Tox environment
-        run: tox --workdir /tmp/tox -e test-all --notest
+      - name: Get the snap artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: snap_artifact
 
-      - name: Test with tox
-        run: tox --workdir /tmp/tox run --skip-pkg-install --result-json results/tox.json -e test-all
+      - name: Test with tox and produce coverage report
+        run: tox -e tics
 
       - name: Run TICS analysis
         uses: tiobe/tics-github-action@v3
-        env:
-          PATH: "/tmp/tox/test-all"
         with:
           mode: qserver
           project: smartctl-exporter-snap
