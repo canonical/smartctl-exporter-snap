@@ -38,10 +38,12 @@ jobs:
         uses: canonical/action-build@v1
 
       - name: Test with tox and produce coverage report
-        run: tox -e tics
+        run: tox --workdir /tmp/tox -e tics
 
       - name: Run TICS analysis
         uses: tiobe/tics-github-action@v3
+        env:
+          PATH: "/tmp/tox/tics/bin:$PATH"
         with:
           mode: qserver
           project: smartctl-exporter-snap
