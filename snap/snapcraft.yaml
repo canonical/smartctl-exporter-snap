@@ -79,7 +79,8 @@ parts:
     override-pull: |
       craftctl default
       TAG=$(git describe --tags)
-      craftctl set version="${TAG#v}"
+      SNAP_GIT_VERSION=$(git -C $CRAFT_PROJECT_DIR describe --always --dirty --abbrev=10)
+      craftctl set version="${TAG#v}+snap-${SNAP_GIT_VERSION}"
   scripts:
     plugin: dump
     source: snap/local
