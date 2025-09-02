@@ -67,6 +67,8 @@ apps:
     plugs:
       - network-bind
       - block-devices
+      - hardware-observe
+      - network-observe
 
 parts:
   smartctl-exporter:
