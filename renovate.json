@@ -1,0 +1,26 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "ignorePaths": [
+    ".github/workflows/check.yaml",    
+    ".github/workflows/promote.yaml",
+    ".github/workflows/release.yaml"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^snap/snapcraft\\.yaml$/"
+      ],
+      "matchStrings": [
+        "source-tag:\\s*(?<currentValue>\\S+)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "prometheus-community/smartctl_exporter",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
+    }
+  ]
+  
+}
