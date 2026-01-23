@@ -11,9 +11,25 @@ add_option() {
     fi
 }
 
+# Add repeatable option (space-separated values become multiple flags)
+add_repeatable_option() {
+    key=$1
+    if value="$(snapctl get "$key" 2>/dev/null)"; then
+        if [ -n "$value" ]; then
+            read -ra devices <<< "$value"
+            for device in "${devices[@]}"; do
+                if [ -n "$device" ]; then
+                    args+=("--$key=$device")
+                fi
+            done
+        fi
+    fi
+}
+
 # Add snap config options
 add_option log.level
 add_option web.listen-address
+add_repeatable_option smartctl.device
 add_option smartctl.device-exclude
 add_option smartctl.device-include
 

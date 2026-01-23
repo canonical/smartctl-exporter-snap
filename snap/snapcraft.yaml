@@ -43,6 +43,9 @@ description: |
     The default is `:9633`.
   - `log.level`: the log level of the smartctl-exporter. One of: [debug, info, warn, error]
     The default is `info`.
+  - `smartctl.device`: Space-separated list of devices to monitor.
+    The exporter will scan the system for available devices if not specified.
+    Examples: `/dev/sda`, `/dev/sda;sat`, `/dev/sdm;megaraid,0`, `/dev/sda /dev/sdm;megaraid,0`
   - `smartctl.device-exclude`: Regexp of device names to exclude from automatic scanning. (mutually exclusive to device-include)
   - `smartctl.device-include`: Regexp of device names to include in automatic scanning. (mutually exclusive to device-exclude)
 
