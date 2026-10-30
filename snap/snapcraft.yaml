@@ -75,7 +75,7 @@ parts:
   smartctl-exporter:
     plugin: go
     source: https://github.com/prometheus-community/smartctl_exporter.git
-    source-tag: v0.14.0
+    source-tag: 0.15.0
     source-type: git
     build-snaps:
       - go
